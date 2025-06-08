@@ -176,10 +176,10 @@ $user_role = $_SESSION['user_role'] ?? 'Department';
                 </li>
 
                 <li class="nav-item">
-                    <a href="<?php echo $base_url; ?>modules/approvals/pending-approvals.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'pending-approvals.php') ? 'active' : ''; ?>">
+                    <a href="<?php echo $base_url; ?>modules/approvals/dispatch-center.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'dispatch-center.php') ? 'active' : ''; ?>">
                         <i class="fas fa-hourglass-half menu-icon"></i>
-                        <span class="menu-text">Pending Approvals</span>
-                        <span class="badge warning">3</span>
+                        <span class="menu-text"> Dispatch Center</span>
+                        <!-- <span class="badge warning">3</span> -->
                     </a>
                 </li>
             </ul>
