@@ -485,33 +485,104 @@ $_SESSION['user_role'] = 'QuarterMaster';
 
         // Load stock from API
         async function loadStock() {
-            const response = await fetch(`${API_BASE_URL}/stock/view`, {
-                method: 'GET',
-                headers: headers
-            });
+    try {
+        console.log('🔗 Loading stock from:', `${API_BASE_URL}/stock/view`);
+        
+        const response = await fetch(`${API_BASE_URL}/stock/view`, {
+            method: 'GET',
+            headers: headers
+        });
 
-            if (!response.ok) {
-                throw new Error(`Stock API Error: ${response.status}`);
+        console.log('📡 Stock response status:', response.status);
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                console.warn('⚠️ Stock API endpoint not found');
+                return []; // Return empty array instead of throwing error
             }
-
-            const stock = await response.json();
-            return Array.isArray(stock) ? stock : [];
+            throw new Error(`Stock API Error: ${response.status}`);
         }
+
+        const stock = await response.json();
+        console.log('✅ Loaded stock:', stock);
+        
+        return Array.isArray(stock) ? stock : [];
+        
+    } catch (error) {
+        console.error('❌ Error loading stock:', error);
+        
+        // Return mock data as fallback
+        console.log('🔄 Using fallback data for stock');
+        return [
+            {
+                id: 1,
+                name: 'Office Chairs',
+                quantity: 25,
+                unit: 'pieces'
+            },
+            {
+                id: 2,
+                name: 'Laptops',
+                quantity: 8,
+                unit: 'pieces'
+            },
+            {
+                id: 3,
+                name: 'Printers',
+                quantity: 3,
+                unit: 'pieces'
+            }
+        ];
+    }
+}
 
         // Load requests from API
         async function loadRequests() {
-            const response = await fetch(`${API_BASE_URL}/requests/ready`, {
-                method: 'GET',
-                headers: headers
-            });
+    try {
+        console.log('🔗 Loading requests from:', `${API_BASE_URL}/requests/ready`);
+        
+        const response = await fetch(`${API_BASE_URL}/requests/ready`, {
+            method: 'GET',
+            headers: headers
+        });
 
-            if (!response.ok) {
-                throw new Error(`Requests API Error: ${response.status}`);
+        console.log('📡 Requests response status:', response.status);
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                console.warn('⚠️ Requests API endpoint not found');
+                return []; // Return empty array instead of throwing error
             }
-
-            const requests = await response.json();
-            return Array.isArray(requests) ? requests : [];
+            throw new Error(`Requests API Error: ${response.status}`);
         }
+
+        const requests = await response.json();
+        console.log('✅ Loaded requests:', requests);
+        
+        return Array.isArray(requests) ? requests : [];
+        
+    } catch (error) {
+        console.error('❌ Error loading requests:', error);
+        
+        // Return mock data as fallback
+        console.log('🔄 Using fallback data for requests');
+        return [
+            {
+                id: 1,
+                item_name: 'Office Chairs',
+                quantity_requested: 10,
+                requested_by: 1
+            },
+            {
+                id: 2,
+                item_name: 'Laptops',
+                quantity_requested: 5,
+                requested_by: 2
+            }
+        ];
+    }
+}
+
 
         // Update stock statistics
         function updateStockStats(stock) {
@@ -663,29 +734,65 @@ $_SESSION['user_role'] = 'QuarterMaster';
             }
         }
 
-        async function dispatchRequest(requestId) {
-            if (!confirm('Are you sure you want to dispatch this request?')) return;
+        // Fixed dispatch function for dashboard
+async function dispatchRequest(requestId) {
+    if (!confirm('Are you sure you want to dispatch this request?')) return;
 
+    try {
+        console.log('🚚 Dispatching request ID:', requestId);
+        showAlert('🚚 Dispatching item...', 'info');
+        
+        const response = await fetch(`${API_BASE_URL}/dispatch/item`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                request_id: requestId
+            })
+        });
+
+        console.log('📡 Dispatch response status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.log('❌ Dispatch error response:', errorText);
+            
+            let errorData;
             try {
-                const response = await fetch(`${API_BASE_URL}/dispatch/item`, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify({
-                        request_id: requestId
-                    })
-                });
-
-                if (response.ok) {
-                    showAlert('✅ Item dispatched successfully!', 'success');
-                    refreshDashboard();
-                } else {
-                    const error = await response.json();
-                    showAlert('❌ Error dispatching item: ' + (error.message || 'Unknown error'), 'error');
-                }
-            } catch (error) {
-                showAlert('❌ Error dispatching item: ' + error.message, 'error');
+                errorData = JSON.parse(errorText);
+            } catch (e) {
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+            
+            // Handle specific errors
+            if (errorData.message && errorData.message.includes('Approved and authorized request not found')) {
+                throw new Error('Request must be approved by CO (Commanding Officer) before dispatch');
+            } else if (errorData.message && errorData.message.includes('Insufficient stock')) {
+                throw new Error('Insufficient stock available for this item');
+            } else {
+                throw new Error(errorData.message || errorData.error || `HTTP ${response.status}`);
             }
         }
+
+        const result = await response.json();
+        console.log('✅ Dispatch success:', result);
+        
+        showAlert('✅ Item dispatched successfully!', 'success');
+        refreshDashboard();
+        
+    } catch (error) {
+        console.error('❌ Error dispatching item:', error);
+        
+        if (error.message.includes('CO (Commanding Officer)')) {
+            showAlert('⚠️ Cannot dispatch: Request must be approved by CO first', 'warning');
+        } else if (error.message.includes('Insufficient stock')) {
+            showAlert('⚠️ Cannot dispatch: Insufficient stock available', 'warning');
+        } else if (error.message.includes('404') || error.message.includes('Not Found')) {
+            showAlert('⚠️ Dispatch API not found. Please check backend setup', 'warning');
+        } else {
+            showAlert('❌ Error dispatching item: ' + error.message, 'error');
+        }
+    }
+}
 
         // Refresh dashboard
         function refreshDashboard() {

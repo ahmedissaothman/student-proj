@@ -133,23 +133,17 @@ $user_role = $_SESSION['user_role'] ?? 'Department';
         <div class="nav-section">
             <div class="nav-section-title">Requests</div>
             <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="<?php echo $base_url; ?>modules/requests/new-request.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'new-request.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-plus-circle menu-icon"></i>
-                        <span class="menu-text">New Request</span>
-                        <span class="badge success">Create</span>
-                    </a>
-                </li>
+                
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="<?php echo $base_url; ?>modules/requests/my-requests.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'my-requests.php') ? 'active' : ''; ?>">
                         <i class="fas fa-clipboard-list menu-icon"></i>
                         <span class="menu-text">My Requests</span>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
-                    <a href="<?php echo $base_url; ?>modules/requests/all-requests.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'all-requests.php') ? 'active' : ''; ?>">
+                    <a href="<?php echo $base_url; ?>modules/requests/qm-all-requests.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'qm-all-requests.php') ? 'active' : ''; ?>">
                         <i class="fas fa-list-alt menu-icon"></i>
                         <span class="menu-text">All Requests</span>
                         <span class="badge info">Monitor</span>
@@ -161,12 +155,7 @@ $user_role = $_SESSION['user_role'] ?? 'Department';
         <div class="nav-section">
             <div class="nav-section-title">Inventory</div>
             <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="<?php echo $base_url; ?>modules/inventory/current-stock.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'current-stock.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-warehouse menu-icon"></i>
-                        <span class="menu-text">Current Stock</span>
-                    </a>
-                </li>
+                
 
                 <li class="nav-item">
                     <a href="<?php echo $base_url; ?>modules/inventory/stock-management.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'stock-management.php') ? 'active' : ''; ?>">
@@ -308,48 +297,13 @@ $user_role = $_SESSION['user_role'] ?? 'Department';
             </ul>
         </div>
 
-        <!-- <div class="nav-section">
-            <div class="nav-section-title">Information</div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="<?php echo $base_url; ?>modules/info/request-status.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'request-status.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-info-circle menu-icon"></i>
-                        <span class="menu-text">Request Status</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <?php endif; ?> -->
-
-        <!-- Common Reports Section - For All Roles (except Department) -->
-        <!-- <?php if ($user_role != 'Department'): ?>
-        <div class="nav-section">
-            <div class="nav-section-title">Analytics</div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="<?php echo $base_url; ?>modules/reports/analytics.php" class="menu-item <?php echo (basename($_SERVER['PHP_SELF']) == 'analytics.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-chart-bar menu-icon"></i>
-                        <span class="menu-text">Reports</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <?php endif; ?> -->
+        
+        <?php endif; ?> 
     </nav>
 
 
 
-    <!-- Sidebar Footer
-    <div class="sidebar-footer">
-        <div class="footer-content">
-            <div class="footer-avatar"><?php echo strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)); ?></div>
-            <div class="footer-text">
-                <div class="footer-name"><?php echo $_SESSION['full_name'] ?? 'User Name'; ?></div>
-                <div class="footer-role"><?php echo $user_role; ?></div>
-            </div>
-            <div class="footer-status online"></div>
-        </div>
-    </div> -->
+    
 </aside>
 
 <style>

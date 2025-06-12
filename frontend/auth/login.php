@@ -640,6 +640,33 @@ if (isset($_COOKIE['remember_user'])) {
             outline: 2px solid var(--primary-color);
             outline-offset: 2px;
         }
+
+        .back-to-main {
+        margin-top: 1rem;
+        text-align: center;
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+        background: rgba(45, 80, 22, 0.1);
+        text-decoration: none;
+        transform: translateX(-2px);
+    }
+
+    .back-link i {
+        font-size: 0.8rem;
+    }
     </style>
 </head>
 <body>
@@ -662,10 +689,16 @@ if (isset($_COOKIE['remember_user'])) {
 
         <!-- Right Panel -->
         <div class="login-right">
-            <div class="login-header">
-                <h2>Secure Login</h2>
-                <p>Access your account to manage office requirements</p>
-            </div>
+        <div class="login-header">
+        <h2>Secure Login</h2>
+        <p>Access your account to manage office requirements</p>
+        <!-- Add this back link -->
+        <div class="back-to-main">
+            <a href="../index.php" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Main Page
+            </a>
+        </div>
+    </div>
 
             <!-- Alert Messages -->
             <?php if (!empty($error_message)): ?>
